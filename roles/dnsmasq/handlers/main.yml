@@ -1,0 +1,5 @@
+---
+# handlers file for dnsmasq
+- name: restart
+  ansible.builtin.command:
+    cmd: /etc/init.d/dnsmasq restart

@@ -1,0 +1,37 @@
+---
+# tasks file for nginx+php-fpm
+- name: Install nginx
+  ansible.builtin.apt:
+    name: nginx
+    state: present
+    update_cache: true
+  tags: install nginx
+
+- name: Install php-fpm
+  ansible.builtin.apt:
+    pkg:
+      - php
+      - php-cli
+      - php-fpm
+      - php-json
+      - php-mysql
+      - php-zip
+      - php-gd
+      - php-mbstring
+      - php-curl
+      - php-xml
+      - php-pear
+      - php-bcmath
+    state: present
+    update_cache: false
+  tags: install php
+
+- name: Change nginx root and create a PHP info file
+  shell: |
+    mkdir -p {{ nginx_documentroot_location }}
+    chmod -R 777 {{ nginx_documentroot_location }}
+    echo "<?php phpinfo(); ?>" >> {{ nginx_documentroot_location }}/info.php
+
+  notify:
+    - restart-nginx
+    - restart-php
